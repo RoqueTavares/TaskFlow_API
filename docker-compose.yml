@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: taskflow_postgres
+    environment:
+      POSTGRES_DB: taskflow
+      POSTGRES_USER: roque
+      POSTGRES_PASSWORD: roque123
+    ports:
+      - "5433:5433"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: taskflow_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/taskflow
+      SPRING_DATASOURCE_USERNAME: roque
+      SPRING_DATASOURCE_PASSWORD: roque123
+
+volumes:
+  postgres_data:
